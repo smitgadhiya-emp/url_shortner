@@ -8,7 +8,7 @@ import { getUrl } from "../controller";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { small_url: string } }
+  { params }: { params: Promise<{ small_url: string }> }
 ) {
   try {
     const { small_url } = await params;

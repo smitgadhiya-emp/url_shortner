@@ -6,8 +6,6 @@ import { nanoid } from "nanoid";
 
 export const getUrl = async (small_url: string) => {
 
-   
-
     if (!small_url) {
         throw new ErrorHandler(400, "Missing 'small_url' parameter");
     }
@@ -40,6 +38,14 @@ export const createUrl = async (request: NextRequest) => {
         throw new ErrorHandler(400, "Missing 'original_url' parameter");
     }
 
+    const urlExists = await supabase.from("urls").select("small_url").eq("original_url", originalUrl).single();
+
+    if (urlExists.data) {
+        console.log(urlExists.data);
+        
+        return urlExists.data;
+    }
+
     const smallUrl = nanoid(6);
 
     const { data, error } = await supabase
@@ -58,3 +64,7 @@ export const createUrl = async (request: NextRequest) => {
 
         return data;
 }
+
+
+
+
