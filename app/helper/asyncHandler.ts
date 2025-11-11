@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { errorResponse } from "./apiResponse";
 import ErrorHandler from "./errorHandler";
 
-type ApiHandler = (
-  request: NextRequest
-) => Promise<NextResponse | Response>;
+type ApiHandler = (request: NextRequest) => Promise<NextResponse | Response>;
 
 export const asyncHandler =
   (functionName = "unknown_function", theFunction: ApiHandler) =>

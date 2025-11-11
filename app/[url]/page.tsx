@@ -1,46 +1,45 @@
-"use client";
-
-import React, { useEffect, useState, useCallback } from "react";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { GET as getUrlHandler } from "../api/url/[small_url]/route";
+import { NextRequest } from "next/server";
 import envVariables from "../config/env";
 
-function Page() {
-  const params = useParams();
-  const url = params?.url as string;
-  const router = useRouter();
+async function Page({ params }: { params: Promise<{ url: string }> }) {
+  const { url } = await params;
 
-  const fetchUrl = useCallback(async () => {
-    if (!url) return;
+  if (!url) {
+    redirect("/");
+  }
 
-    try {
-      const response = await fetch(
-        `${envVariables.NEXT_PUBLIC_APP_URL}/api/url/${url}`
-      );
-      const data = await response.json();
-      const fetchedUrl = data.data?.original_url || "";
+  try {
+    const request = new NextRequest(
+      new URL(
+        `/api/url/${url}`,
+        envVariables.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+      )
+    );
 
-      // Redirect when URL is fetched
-      if (fetchedUrl) {
-        router.push(fetchedUrl);
-        // window.location.href = fetchedUrl
+    const response = await getUrlHandler(request, {
+      params: Promise.resolve({ small_url: url }),
+    });
+
+    // Check if the response is a redirect
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get("location");
+      if (location) {
+        redirect(location);
+      } else {
+        redirect("/");
       }
-    } catch (error) {
-      console.error("Error fetching URL:", error);
+    } else {
+      redirect("/");
     }
-  }, [url]);
-
-  useEffect(() => {
-    fetchUrl();
-  }, [fetchUrl]);
-
-  return (
-    <div>
-      
-                <p>Redirecting...</p>
-           
-    </div>
-  );
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+      throw error;
+    }
+    console.error("Error:", error);
+    redirect("/");
+  }
 }
 
 export default Page;

@@ -12,11 +12,25 @@ export async function GET(
 ) {
   try {
     const { small_url } = await params;
+
+    if (!small_url) {
+      return errorResponse({
+        status: 400,
+        message: "Missing 'small_url' parameter",
+      });
+    }
+
     const data = await getUrl(small_url);
-    return successResponse({
-      data,
-      message: "URL fetched successfully",
-    });
+
+    if (!data) {
+      return errorResponse({
+        status: 404,
+        message: "URL not found",
+      });
+    }
+
+    const original_url = data.original_url;
+    return NextResponse.redirect(original_url);
   } catch (error) {
     return errorResponse({
       status: error instanceof ErrorHandler ? error.status : 500,

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import envVariables from "./config/env";
@@ -12,12 +12,12 @@ export default function Home() {
     if (!inputValue.trim()) {
       return;
     }
-    
+
     try {
       const response = await fetch(`/api/url/create`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ originalUrl: inputValue }),
       });
@@ -41,15 +41,17 @@ export default function Home() {
   };
 
   return (
-    <div style={{ 
-      padding: "40px", 
-      maxWidth: "600px", 
-      margin: "0 auto",
-      fontFamily: "Arial, sans-serif"
-    }}>
+    <div
+      style={{
+        padding: "40px",
+        maxWidth: "600px",
+        margin: "0 auto",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
       <h1 style={{ marginBottom: "30px" }}>URL Shortener</h1>
-      
-      <div style={{ gap: "20px", display: "flex", justifyContent: "center" }} >
+
+      <div style={{ gap: "20px", display: "flex", justifyContent: "center" }}>
         <input
           type="text"
           value={inputValue}
@@ -61,33 +63,34 @@ export default function Home() {
             fontSize: "16px",
             border: "1px solid #ccc",
             borderRadius: "4px",
-            boxSizing: "border-box"
+            boxSizing: "border-box",
           }}
         />
 
         <button
           onClick={fetchUrl}
           style={{
-              padding: "12px 24px",
-              fontSize: "16px",
-              backgroundColor: "#0070f3",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-            cursor: "pointer"
-        }}
+            padding: "12px 24px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
         >
-         Get Short URL
+          Get Short URL
         </button>
-
-            </div>
+      </div>
       {smallUrl && (
-        <div style={{ 
-          display: "flex", 
-          alignItems: "center", 
-          gap: "10px",
-          marginTop: "20px"
-        }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            marginTop: "20px",
+          }}
+        >
           <a
             href={`${envVariables.NEXT_PUBLIC_APP_URL}/${smallUrl}`}
             target="_blank"
@@ -98,7 +101,7 @@ export default function Home() {
               fontSize: "16px",
               color: "#0070f3",
               textDecoration: "underline",
-              wordBreak: "break-all"
+              wordBreak: "break-all",
             }}
           >
             {`${envVariables.NEXT_PUBLIC_APP_URL}/${smallUrl}`}
@@ -116,7 +119,7 @@ export default function Home() {
               display: "flex",
               alignItems: "center",
               gap: "6px",
-              whiteSpace: "nowrap"
+              whiteSpace: "nowrap",
             }}
             title="Copy URL"
           >
